@@ -12,21 +12,21 @@ An industry-standard, desktop Connect 4 application featuring a **Minimax AI Eng
 ## 🌟 Key Features
 
 - 🤖 **Minimax AI Engine (Depth 5 Search)**
-  - Powered by Alpha-Beta pruning with custom heuristic evaluation.
-  - Implements **Center-Outward Move Ordering** (`[3, 2, 4, 1, 5, 0, 6]`) to maximize pruning efficiency and cut down node evaluation trees.
+    - Powered by Alpha-Beta pruning with custom heuristic evaluation.
+    - Implements **Center-Outward Move Ordering** (`[3, 2, 4, 1, 5, 0, 6]`) to maximize pruning efficiency and cut down node evaluation trees.
 - 🔮 **Holographic Ghost Pieces (Principal Variation Line)**
-  - Projects the AI's predicted sequence of future moves on the board in real-time.
-  - Translucent red dashed rings depict expected human counter-moves, while yellow dashed rings show planned AI follow-ups.
+    - Projects the AI's predicted sequence of future moves on the board in real-time.
+    - Translucent red dashed rings depict expected human counter-moves, while yellow dashed rings show planned AI follow-ups.
 - ⚡ **DFS Win Checker & Real-Time Telemetry**
-  - Optimized Depth-First Search win condition evaluation.
-  - Live side panel displaying computation metrics (Nodes explored, search latency in ms) for both Minimax and DFS routines.
+    - Optimized Depth-First Search win condition evaluation.
+    - Live side panel displaying computation metrics (Nodes explored, search latency in ms) for both Minimax and DFS routines.
 - 🎨 **Futuristic UI / UX Design System**
-  - Built with PyQt6 featuring ambient canvas lighting, smooth radial gradients, hover indicators, and glassmorphism styling.
+    - Built with PyQt6 featuring ambient canvas lighting, smooth radial gradients, hover indicators, and glassmorphism styling.
 - ⏱️ **Match & Turn Clock Controllers**
-  - Configurable match session timers (1, 3, 5 mins, or infinite) with per-turn countdown clocks.
+    - Configurable match session timers (1, 3, 5 mins, or infinite) with per-turn countdown clocks.
 - 💡 **AI Hint System & Instant Rematch**
-  - Tactical "USE AI HINT" button to assist human players.
-  - Dynamic **PLAY AGAIN** restart trigger that appears seamlessly upon game completion.
+    - Tactical "USE AI HINT" button to assist human players.
+    - Dynamic **PLAY AGAIN** restart trigger that appears seamlessly upon game completion.
 
 ---
 
@@ -56,25 +56,29 @@ connect4_project/
 ## 🧠 AI Engine & Algorithm Mechanics
 
 ### 1. Minimax with Alpha-Beta Pruning & Move Ordering
+
 The AI evaluates game trees using the Minimax theorem. To achieve optimal performance at **Depth 5**, moves are evaluated using center-outward column ordering:
 
-$$\text{COLUMN\_ORDER} = [3, 2, 4, 1, 5, 0, 6]$$
+$$\text{COLUMN\\_ORDER} = [3, 2, 4, 1, 5, 0, 6]$$
 
 Evaluating column 3 (the center column) first maximizes the probability of finding high-value utility scores early, triggering aggressive **Alpha-Beta cutoffs** ($\alpha \ge \beta$) and pruning unnecessary branches.
 
 ### 2. Heuristic Scoring Function
+
 Positions are evaluated across all 4-slot sliding windows (Horizontal, Vertical, Diagonals) and center column control:
 
-| Window Pattern / Condition | Score Weight | Tactical Objective |
-| :--- | :--- | :--- |
-| **4 Pieces in a Row** | `+100,000` | Immediate Victory |
-| **Opponent 3 Pieces + 1 Empty** | `-800` | Critical Mandatory Block |
-| **3 Pieces + 1 Empty** | `+50` | High-Priority Attack Setup |
-| **2 Pieces + 2 Empty** | `+10` | Early Game Position Building |
-| **Center Column Control** | `+6` per piece | Dominating the board center |
+| Window Pattern / Condition      | Score Weight   | Tactical Objective           |
+| :------------------------------ | :------------- | :--------------------------- |
+| **4 Pieces in a Row**           | `+100,000`     | Immediate Victory            |
+| **Opponent 3 Pieces + 1 Empty** | `-800`         | Critical Mandatory Block     |
+| **3 Pieces + 1 Empty**          | `+50`          | High-Priority Attack Setup   |
+| **2 Pieces + 2 Empty**          | `+10`          | Early Game Position Building |
+| **Center Column Control**       | `+6` per piece | Dominating the board center  |
 
 ### 3. Holographic Ghost Pieces (Principal Variation)
+
 The AI returns its **Principal Variation (PV)**—the optimal path sequence assuming rational play from both sides. The renderer projects this path onto the board:
+
 - **Red Dashed Ring** ($\text{Opacity } 0.35$): Anticipated Human move.
 - **Yellow Dashed Ring** ($\text{Opacity } 0.35$): Planned AI counter-move.
 
@@ -83,37 +87,40 @@ The AI returns its **Principal Variation (PV)**—the optimal path sequence assu
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - **Python 3.10+** installed on your system.
 
 ### Installation
 
 1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/your-username/connect4-ai.git
-   cd connect4-ai
-   ```
+
+    ```bash
+    https://github.com/iamabraryeasir/Connect4-AI-Project.git
+    cd Connect4-AI-Project
+    ```
 
 2. **Create a Virtual Environment**
-   - **Windows:**
-     ```powershell
-     python -m venv .venv
-     .\.venv\Scripts\activate
-     ```
-   - **Linux / macOS:**
-     ```bash
-     python3 -m venv .venv
-     source .venv/bin/activate
-     ```
+    - **Windows:**
+        ```powershell
+        python -m venv .venv
+        .\.venv\Scripts\activate
+        ```
+    - **Linux / macOS:**
+        ```bash
+        python3 -m venv .venv
+        source .venv/bin/activate
+        ```
 
 3. **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 4. **Launch the Game**
-   ```bash
-   python main.py
-   ```
+    ```bash
+    python main.py
+    ```
 
 ---
 
