@@ -114,46 +114,43 @@ def minimax(
     if depth == 0 or is_terminal:
         if is_terminal:
             if winning_piece == AI_PIECE:
-                return (None, 10000000000000 + depth, [])
+                return (None, 10000000000000 + depth)
             elif winning_piece == PLAYER_PIECE:
-                return (None, -10000000000000 - depth, [])
+                return (None, -10000000000000 - depth)
             else:
-                return (None, 0, [])
+                return (None, 0)
         else:
-            return (None, score_position(board, AI_PIECE), [])
+            return (None, score_position(board, AI_PIECE))
 
     if maximizingPlayer:
         value = -np.inf
         best_col = random.choice(valid_locations)
-        best_pv = []
         for col in valid_locations:
             row = game_logic.get_next_open_row(board, col)
             b_copy = board.copy()
             game_logic.drop_piece(b_copy, row, col, AI_PIECE)
 
-            _, new_score, child_pv = minimax(
+            _, new_score = minimax(
                 b_copy, depth - 1, alpha, beta, False, nodes_count, row, col, AI_PIECE
             )
 
             if new_score > value:
                 value = new_score
                 best_col = col
-                best_pv = [col] + child_pv
             alpha = max(alpha, value)
             if alpha >= beta:
                 break
-        return best_col, value, best_pv
+        return best_col, value
 
     else:
         value = np.inf
         best_col = random.choice(valid_locations)
-        best_pv = []
         for col in valid_locations:
             row = game_logic.get_next_open_row(board, col)
             b_copy = board.copy()
             game_logic.drop_piece(b_copy, row, col, PLAYER_PIECE)
 
-            _, new_score, child_pv = minimax(
+            _, new_score = minimax(
                 b_copy,
                 depth - 1,
                 alpha,
@@ -168,15 +165,13 @@ def minimax(
             if new_score < value:
                 value = new_score
                 best_col = col
-                best_pv = [col] + child_pv
             beta = min(beta, value)
             if alpha >= beta:
                 break
-        return best_col, value, best_pv
+        return best_col, value
 
 
 def get_best_move(board, depth=5):
     nodes_count = [0]
-    col, _, pv_list = minimax(board, depth, -np.inf, np.inf, True, nodes_count)
-    predicted_path = pv_list[1:] if len(pv_list) > 1 else []
-    return col, nodes_count[0], predicted_path
+    col, _ = minimax(board, depth, -np.inf, np.inf, True, nodes_count)
+    return col, nodes_count[0]

@@ -200,37 +200,7 @@ def draw_game(painter, state):
             )
             painter.setOpacity(1.0)
 
-    # 6. Holographic Ghost Pieces (AI Predicted Future Path)
-    predicted_path = state.get("ai_predicted_path", [])
-    if predicted_path and not state["game_over"]:
-        simulated_board = state["board"].copy()
-        sim_player = 1
-
-        for col in predicted_path:
-            row = game_logic.get_next_open_row(simulated_board, col)
-            if row is not None:
-                game_logic.drop_piece(simulated_board, row, col, sim_player)
-
-                cx = MARGIN_LEFT + col * CELL_SIZE + CELL_SIZE // 2
-                cy = MARGIN_TOP + (5 - row) * CELL_SIZE + CELL_SIZE // 2
-
-                ghost_color = QColor("#FF4B4B") if sim_player == 1 else QColor("#FFD54F")
-
-                painter.setOpacity(0.35)
-                painter.setBrush(QBrush(ghost_color))
-                pen = QPen(QColor("#FFFFFF"), 2, Qt.PenStyle.DashLine)
-                painter.setPen(pen)
-                painter.drawEllipse(
-                    QPointF(cx * 1.0, cy * 1.0),
-                    CELL_SIZE // 2 - 9.0,
-                    CELL_SIZE // 2 - 9.0,
-                )
-
-            sim_player = 2 if sim_player == 1 else 1
-
-        painter.setOpacity(1.0)
-
-    # 7. Winning Connection Line
+    # 6. Winning Connection Line
     if state["game_over"] and state["win_path"]:
         pen = QPen(QColor("#00E5FF"), 10)
         pen.setCapStyle(Qt.PenCapStyle.RoundCap)
@@ -250,4 +220,3 @@ def draw_game(painter, state):
             MARGIN_TOP + (5 - r2) * CELL_SIZE + CELL_SIZE // 2,
         )
         painter.drawLine(int(x1), int(y1), int(x2), int(y2))
-

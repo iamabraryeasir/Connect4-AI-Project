@@ -18,7 +18,6 @@ def create_initial_state(mode="pva", session_time=300):
         "ai_nodes": 0,
         "ai_time": 0.0,
         "ai_thinking": False,
-        "ai_predicted_path": [],
         "mode": mode,
         "session_time": session_time,
         "turn_time": 15,
@@ -52,9 +51,6 @@ def execute_move(state, col):
     if state["game_over"] or col == -1:
         return state
 
-    # Clear holographic predictions whenever a move is executed
-    state["ai_predicted_path"] = []
-
     board = state["board"]
     player = state["current_player"]
 
@@ -86,7 +82,7 @@ def execute_move(state, col):
 
 
 def apply_hint(state):
-    col, _, _ = minimax.get_best_move(state["board"], depth=5)
+    col, _ = minimax.get_best_move(state["board"], depth=5)
     state["hint_col"] = col
     state["hint_active"] = True
     state["next_player_bonus_turns"] = 2
@@ -115,9 +111,7 @@ def tick_timers(state):
 
 def process_ai_turn(state):
     start_time = time.perf_counter()
-    best_col, ai_nodes_explored, predicted_path = minimax.get_best_move(
-        state["board"], depth=5
-    )
+    best_col, ai_nodes_explored = minimax.get_best_move(state["board"], depth=5)
     end_time = time.perf_counter()
 
     state["ai_nodes"] = ai_nodes_explored
@@ -125,6 +119,5 @@ def process_ai_turn(state):
     state["ai_thinking"] = False
 
     state = execute_move(state, best_col)
-    state["ai_predicted_path"] = predicted_path
 
     return state

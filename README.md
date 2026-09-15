@@ -1,146 +1,253 @@
-# 🔴 CONNECT 4 — Advanced AI Engine & Interactive GUI
+# 🔴 CONNECT 4 — Advanced AI Engine & Desktop GUI
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![PyQt6](https://img.shields.io/badge/GUI-PyQt6-41CD52?style=for-the-badge&logo=qt&logoColor=white)](https://pypi.org/project/PyQt6/)
 [![NumPy](https://img.shields.io/badge/Matrix-NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)](https://numpy.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue?style=for-the-badge)](https://www.python.org/)
 
-An industry-standard, desktop Connect 4 application featuring a **Minimax AI Engine with Alpha-Beta Pruning**, **Depth-First Search (DFS)** win validation, **Holographic Ghost Piece trajectory projection**, and a custom **PyQt6 dark-mode interface** with real-time performance telemetry.
+An academic-grade, modular desktop implementation of **Connect 4** built with **Python 3**, **PyQt6**, and **NumPy**. The project integrates an adversarial **Minimax AI Engine with Alpha-Beta Pruning**, **Center-Outward Move Ordering**, **Depth-First Search (DFS) directional win verification**, and a high-performance **QPainter 2D graphics pipeline** featuring real-time algorithm performance telemetry.
+
+---
+
+## 📑 Table of Contents
+
+- [Key Features](#-key-features)
+- [Project Architecture](#-project-architecture)
+- [Module Breakdown](#-module-breakdown)
+- [AI Engine & Algorithm Mechanics](#-ai-engine--algorithm-mechanics)
+  - [1. Minimax with Alpha-Beta Pruning](#1-minimax-with-alpha-beta-pruning)
+  - [2. Move Ordering Optimization](#2-move-ordering-optimization)
+  - [3. Heuristic Evaluation Function](#3-heuristic-evaluation-function)
+  - [4. DFS Directional Win Detection](#4-dfs-directional-win-detection)
+- [Game Modes & State Rules](#-game-modes--state-rules)
+- [Installation & Getting Started](#-installation--getting-started)
+- [Controls & User Guide](#-controls--user-guide)
+- [Tech Stack](#-tech-stack)
+- [License](#-license)
 
 ---
 
 ## 🌟 Key Features
 
-- 🤖 **Minimax AI Engine (Depth 5 Search)**
-    - Powered by Alpha-Beta pruning with custom heuristic evaluation.
-    - Implements **Center-Outward Move Ordering** (`[3, 2, 4, 1, 5, 0, 6]`) to maximize pruning efficiency and cut down node evaluation trees.
-- 🔮 **Holographic Ghost Pieces (Principal Variation Line)**
-    - Projects the AI's predicted sequence of future moves on the board in real-time.
-    - Translucent red dashed rings depict expected human counter-moves, while yellow dashed rings show planned AI follow-ups.
-- ⚡ **DFS Win Checker & Real-Time Telemetry**
-    - Optimized Depth-First Search win condition evaluation.
-    - Live side panel displaying computation metrics (Nodes explored, search latency in ms) for both Minimax and DFS routines.
-- 🎨 **Futuristic UI / UX Design System**
-    - Built with PyQt6 featuring ambient canvas lighting, smooth radial gradients, hover indicators, and glassmorphism styling.
-- ⏱️ **Match & Turn Clock Controllers**
-    - Configurable match session timers (1, 3, 5 mins, or infinite) with per-turn countdown clocks.
-- 💡 **AI Hint System & Instant Rematch**
-    - Tactical "USE AI HINT" button to assist human players.
-    - Dynamic **PLAY AGAIN** restart trigger that appears seamlessly upon game completion.
+- 🤖 **Adversarial Minimax AI Engine (Depth 5 Search)**
+  - Recursive minimax search tree evaluation enhanced with **Alpha-Beta Cutoffs** ($\alpha \ge \beta$).
+  - Evaluates tens of thousands of board states in sub-second latency with tactical heuristic weights.
+
+- ⚡ **Center-Outward Move Ordering**
+  - Prioritizes searching high-potential central columns (`[3, 2, 4, 1, 5, 0, 6]`) first to maximize early alpha-beta branch pruning.
+
+- 🔍 **DFS Directional Win Validation**
+  - Explores linear and diagonal axes recursively from the last played piece to identify four-in-a-row alignments with exact coordinate tracking.
+
+- 📊 **Live Performance Telemetry Cards**
+  - Real-time side panel displaying nodes evaluated and execution duration (in milliseconds) for both the Minimax search and the DFS win validator.
+
+- ⏱️ **Match & Turn Clock Management**
+  - Configurable match session clocks (3, 5, or 10 minutes) alongside a dynamic 15-second per-turn countdown.
+
+- 💡 **Tactical AI Hint System**
+  - Built-in hint advisor analyzing the current grid position and highlighting the mathematically optimal column.
+
+- 🎨 **Futuristic PyQt6 UI / UX**
+  - Custom dark glassmorphism theme, ambient radial background glow, smooth column hover highlights, and dynamic winning stroke lines.
 
 ---
 
 ## 🏗️ Project Architecture
 
+The codebase enforces strict separation of concerns across logic, state, algorithms, and rendering:
+
 ```
 connect4_project/
-├── main.py                    # Application entry point
-├── requirements.txt           # Dependency specifications
-├── README.md                  # Project documentation
+├── main.py                     # Application entry point & Qt event loop bootstrap
+├── requirements.txt            # Project dependencies
+├── README.md                   # Complete project documentation
 └── src/
     ├── ai/
-    │   ├── minimax.py         # Minimax algorithm, Alpha-Beta pruning & Move Ordering
-    │   └── win_checker.py     # DFS directional win checking algorithm
+    │   ├── __init__.py
+    │   ├── minimax.py          # Minimax algorithm, Alpha-Beta pruning & Heuristic scoring
+    │   └── win_checker.py      # Multi-directional DFS win condition checker
     ├── core/
-    │   └── game_logic.py      # Grid matrix state, drop mechanics, location validation
+    │   ├── __init__.py
+    │   └── game_logic.py       # NumPy matrix operations, piece drops & grid validation
     ├── state/
-    │   └── game_state.py      # Immutable-style state manager & turn flow controller
+    │   ├── __init__.py
+    │   └── game_state.py       # Central state manager, turn engine & clock tick loops
     └── ui/
-        ├── app_controller.py  # Navigation, main window & launcher screen
-        ├── board_renderer.py # High-performance QPainter 2D graphics engine
-        └── game_window.py    # Game view manager & UI event handling
+        ├── __init__.py
+        ├── app_controller.py   # QStackedWidget navigation & launcher start screen
+        ├── board_renderer.py  # 2D QPainter graphics engine & telemetry card renderer
+        └── game_window.py     # Game canvas event handlers, timers & user actions
 ```
+
+---
+
+## 🧩 Module Breakdown
+
+### 1. Core Logic (`src/core/game_logic.py`)
+- **Grid Representation**: Maintains a $6 \times 7$ 2D NumPy array with row indices $0$ (bottom) to $5$ (top).
+- `create_board()`: Initializes a zero-filled NumPy matrix.
+- `drop_piece(board, row, col, piece)`: Places the active player's disc into the designated cell.
+- `is_valid_location(board, col)`: Validates whether a given column has available space.
+- `get_next_open_row(board, col)`: Finds the lowest unoccupied row index in a target column.
+- `is_board_full(board)`: Detects stalemate scenarios where no legal moves remain.
+
+### 2. AI Engine (`src/ai/minimax.py` & `src/ai/win_checker.py`)
+- **`minimax.py`**: Executes recursive minimax search with alpha-beta bounds, center-weighted column permutations, and positional evaluation.
+- **`win_checker.py`**: Multi-directional Depth-First Search traversing the 4 primary axes (Horizontal, Vertical, Positive Diagonal, Negative Diagonal) starting from the last played piece coordinates.
+
+### 3. State Engine (`src/state/game_state.py`)
+- Centralized immutable-style state dictionary containing:
+  - Board matrix, current turn, game over status, and winner identifier.
+  - Performance telemetry metrics (`dfs_nodes`, `dfs_time`, `ai_nodes`, `ai_time`).
+  - Session clock, per-turn timers, consecutive turns tracker, and hint flags.
+- Dispatches move actions, handles turn transitions, applies hint rewards/penalties, and coordinates AI execution.
+
+### 4. User Interface & Rendering (`src/ui/`)
+- **`app_controller.py`**: Hosts `AppController` (`QStackedWidget`) managing transitions between the start screen (`StartScreen`) and the active game view (`GameWindow`).
+- **`board_renderer.py`**: Pure `QPainter` drawing pipeline handling the ambient background gradient, disc slots, hover overlays, win-line indicators, and telemetry stat panels.
+- **`game_window.py`**: Receives mouse events, manages Qt clocks (`QTimer`), coordinates AI response single-shots, and handles instant rematch actions.
 
 ---
 
 ## 🧠 AI Engine & Algorithm Mechanics
 
-### 1. Minimax with Alpha-Beta Pruning & Move Ordering
+### 1. Minimax with Alpha-Beta Pruning
 
-The AI evaluates game trees using the Minimax theorem. To achieve optimal performance at **Depth 5**, moves are evaluated using center-outward column ordering:
+The AI models Connect 4 as a two-player, zero-sum game of perfect information. The minimax value of state $s$ at depth $d$ is determined by:
 
-$$\text{COLUMN\\_ORDER} = [3, 2, 4, 1, 5, 0, 6]$$
+$$\text{Minimax}(s, d) = \begin{cases} 
+\text{Utility}(s) & \text{if } d = 0 \text{ or terminal}(s) \\
+\max_{a \in \text{Actions}(s)} \text{Minimax}(\text{Result}(s, a), d-1) & \text{if Maximizing (AI)} \\
+\min_{a \in \text{Actions}(s)} \text{Minimax}(\text{Result}(s, a), d-1) & \text{if Minimizing (Player)}
+\end{cases}$$
 
-Evaluating column 3 (the center column) first maximizes the probability of finding high-value utility scores early, triggering aggressive **Alpha-Beta cutoffs** ($\alpha \ge \beta$) and pruning unnecessary branches.
+**Alpha-Beta Cutoffs**:
+- $\alpha$: Highest score guaranteed to the maximizing player so far.
+- $\beta$: Lowest score guaranteed to the minimizing player so far.
+- If $\alpha \ge \beta$, the current branch is pruned immediately without evaluating remaining siblings.
 
-### 2. Heuristic Scoring Function
+```
+                  [Max Node] (α = -inf, β = +inf)
+                  /         \
+                 /           \
+     [Min Node]               [Min Node] (Pruned when α >= β)
+      /      \
+  Leaf(5)   Leaf(3)
+```
 
-Positions are evaluated across all 4-slot sliding windows (Horizontal, Vertical, Diagonals) and center column control:
+### 2. Move Ordering Optimization
 
-| Window Pattern / Condition      | Score Weight   | Tactical Objective           |
-| :------------------------------ | :------------- | :--------------------------- |
-| **4 Pieces in a Row**           | `+100,000`     | Immediate Victory            |
-| **Opponent 3 Pieces + 1 Empty** | `-800`         | Critical Mandatory Block     |
-| **3 Pieces + 1 Empty**          | `+50`          | High-Priority Attack Setup   |
-| **2 Pieces + 2 Empty**          | `+10`          | Early Game Position Building |
-| **Center Column Control**       | `+6` per piece | Dominating the board center  |
+Alpha-Beta pruning efficiency depends heavily on the order in which child nodes are visited. Connect 4 dynamics favor central column control; therefore, child states are explored from the center outward:
 
-### 3. Holographic Ghost Pieces (Principal Variation)
+$$\text{COLUMN\_ORDER} = [3, 2, 4, 1, 5, 0, 6]$$
 
-The AI returns its **Principal Variation (PV)**—the optimal path sequence assuming rational play from both sides. The renderer projects this path onto the board:
+Starting search exploration at column $3$ (the physical center) yields higher evaluation scores earlier, allowing the algorithm to maximize cutoffs and prune significantly larger sub-trees.
 
-- **Red Dashed Ring** ($\text{Opacity } 0.35$): Anticipated Human move.
-- **Yellow Dashed Ring** ($\text{Opacity } 0.35$): Planned AI counter-move.
+### 3. Heuristic Evaluation Function
+
+When reaching maximum search depth ($d = 5$) on non-terminal states, the engine scores the board using a 4-slot sliding window algorithm across all horizontal, vertical, and diagonal lines:
+
+| Window Pattern / Condition | Score Value | Tactical Rationale |
+| :--- | :--- | :--- |
+| **4 AI Pieces** | `+100,000` | Terminal / immediate AI victory |
+| **Opponent 3 Pieces + 1 Empty** | `-800` | High-threat defense: mandatory block |
+| **AI 3 Pieces + 1 Empty** | `+50` | High-priority offensive setup |
+| **AI 2 Pieces + 2 Empty** | `+10` | Early-game potential structure building |
+| **Center Column Control** | `+6` / piece | Board center dominance multiplier |
 
 ---
 
-## 🚀 Getting Started
+### 4. DFS Directional Win Detection
+
+Rather than scanning the entire $6 \times 7$ grid after each move, `win_checker.py` performs a targeted directional Depth-First Search centered at the coordinates of the newly placed piece `(last_row, last_col)`:
+
+$$\text{Axes} = \{ \text{Horizontal: } (0, \pm 1), \text{Vertical: } (\pm 1, 0), \text{Diag } /: (\pm 1, \pm 1), \text{Diag } \backslash: (\pm 1, \mp 1) \}$$
+
+For each axis, DFS explores both positive and negative directions recursively:
+$$\text{Total Streak} = 1 + \text{count}(\vec{d}_1) + \text{count}(\vec{d}_2)$$
+If $\text{Total Streak} \ge 4$, a victory is declared and the complete ordered streak path is passed to `board_renderer.py` to draw the winning connection line.
+
+---
+
+## 🎮 Game Modes & State Rules
+
+1. **Player vs AI (PvA)**
+   - Battle against the Depth-5 Minimax AI engine.
+   - The AI takes calculated turns with realistic reaction delays.
+2. **Player vs Player (PvP)**
+   - Local pass-and-play two-player mode on the same device.
+3. **AI Tactical Hint (`USE AI HINT`)**
+   - Human players can request a move suggestion during their turn.
+   - Highlights the optimal column calculated by the AI engine.
+4. **Time Controls**
+   - **Match Duration**: Configurable to 3, 5, or 10 minutes.
+   - **Turn Clock**: 15 seconds per move. If time expires, the turn automatically flips to the opponent.
+5. **Instant Rematch**
+   - Upon victory, defeat, or timeout, a `PLAY AGAIN` button appears on the side panel to reset the board instantly.
+
+---
+
+## 🚀 Installation & Getting Started
 
 ### Prerequisites
 
-- **Python 3.10+** installed on your system.
+- **Python 3.10+**
+- **pip** package manager
 
-### Installation
+### 1. Clone the Repository
 
-1. **Clone the Repository**
+```bash
+git clone https://github.com/iamabraryeasir/Connect4-AI-Project.git
+cd Connect4-AI-Project
+```
 
-    ```bash
-    https://github.com/iamabraryeasir/Connect4-AI-Project.git
-    cd Connect4-AI-Project
-    ```
+### 2. Set Up Virtual Environment
 
-2. **Create a Virtual Environment**
-    - **Windows:**
-        ```powershell
-        python -m venv .venv
-        .\.venv\Scripts\activate
-        ```
-    - **Linux / macOS:**
-        ```bash
-        python3 -m venv .venv
-        source .venv/bin/activate
-        ```
+- **Windows (PowerShell):**
+  ```powershell
+  python -m venv .venv
+  .\.venv\Scripts\activate
+  ```
+- **Linux / macOS:**
+  ```bash
+  python3 -m venv .venv
+  source .venv/bin/activate
+  ```
 
-3. **Install Dependencies**
+### 3. Install Dependencies
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
-4. **Launch the Game**
-    ```bash
-    python main.py
-    ```
+### 4. Launch the Game
 
----
-
-## 🕹️ Game Modes & Controls
-
-- **Player vs AI (PvA)**: Battle against the Depth-5 Minimax AI engine.
-- **Player vs Player (PvP)**: Pass-and-play local multiplayer mode.
-- **AI Hint**: Click `USE AI HINT` during your turn to highlight the recommended column.
-- **Play Again**: Click `PLAY AGAIN` on the right side panel after game completion to instantly restart a match.
+```bash
+python main.py
+```
 
 ---
 
-## 🛠️ Built With
+## 🕹️ Controls & User Guide
 
-- **[Python](https://www.python.org/)** — Core programming language.
-- **[PyQt6](https://pypi.org/project/PyQt6/)** — Cross-platform GUI framework and QPainter graphics pipeline.
-- **[NumPy](https://numpy.org/)** — High-performance 2D matrix manipulation for game board representations.
+- **Mouse Hover**: Move cursor across columns to see the column highlight indicator.
+- **Left Click**: Drop a disc into the hovered column.
+- **QUIT TO MENU**: Return to the launcher screen to reconfigure match settings.
+- **USE AI HINT**: Consult the Minimax engine for tactical recommendation.
+- **PLAY AGAIN / RESTART GAME**: Reset the board with existing configuration.
+
+---
+
+## 🛠️ Tech Stack
+
+- **[Python 3.10+](https://www.python.org/)** — Core language.
+- **[PyQt6](https://pypi.org/project/PyQt6/)** — Cross-platform GUI framework and 2D hardware-accelerated canvas renderer.
+- **[NumPy](https://numpy.org/)** — High-performance multidimensional array manipulation for matrix states.
 
 ---
 
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for details.
+Distributed under the **MIT License**. See `LICENSE` for more information.
