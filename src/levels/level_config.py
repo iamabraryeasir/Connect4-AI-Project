@@ -20,68 +20,68 @@ class LevelConfig:
 LEVELS: Dict[int, LevelConfig] = {
     1: LevelConfig(
         id=1,
-        name="Stage 1",
-        boss_name="Spark",
-        title="Novice Bot",
+        name="Level 1",
+        boss_name="Novice Agent",
+        title="1-Ply Evaluation",
         depth=1,
         blunder_rate=0.35,
         turn_time=20,
         session_time=300,
         hints_allowed=5,
-        accent_color="#00E676",  # Neon Green
-        description="Shallow 1-ply horizon with frequent tactical oversights. An easy entry point.",
+        accent_color="#00E676",  # Emerald Green
+        description="Baseline heuristic evaluator assessing immediate 1-ply board transitions with intentional stochastic variance.",
     ),
     2: LevelConfig(
         id=2,
-        name="Stage 2",
-        boss_name="Circuit",
-        title="Apprentice",
+        name="Level 2",
+        boss_name="Apprentice Agent",
+        title="2-Ply Minimax",
         depth=2,
         blunder_rate=0.15,
         turn_time=15,
         session_time=300,
         hints_allowed=3,
-        accent_color="#00E5FF",  # Neon Cyan
-        description="2-ply search with basic positional awareness. Blocks direct 3-in-a-row threats.",
+        accent_color="#00E5FF",  # Cyan
+        description="2-ply search evaluating immediate opponent replies and preventing direct 3-in-a-row formations.",
     ),
     3: LevelConfig(
         id=3,
-        name="Stage 3",
-        boss_name="Vector",
-        title="Tactician",
+        name="Level 3",
+        boss_name="Tactical Agent",
+        title="3-Ply Alpha-Beta",
         depth=3,
         blunder_rate=0.0,
         turn_time=15,
         session_time=300,
         hints_allowed=2,
-        accent_color="#FFD54F",  # Gold / Amber
-        description="Consistent 3-ply heuristic search with aggressive center column dominance.",
+        accent_color="#FFD54F",  # Amber
+        description="3-ply deterministic search incorporating center column dominance and directional window scoring.",
     ),
     4: LevelConfig(
         id=4,
-        name="Stage 4",
-        boss_name="Nexus",
-        title="Grandmaster",
+        name="Level 4",
+        boss_name="Advanced Agent",
+        title="4-Ply Alpha-Beta",
         depth=4,
         blunder_rate=0.0,
         turn_time=12,
         session_time=300,
         hints_allowed=1,
-        accent_color="#FF4B4B",  # Neon Red
-        description="Deep 4-ply Alpha-Beta pruning engine that engineers multi-pronged fork attacks.",
+        accent_color="#FF7043",  # Coral / Orange
+        description="Deep 4-ply minimax with aggressive alpha-beta pruning and multi-step tactical positioning.",
     ),
     5: LevelConfig(
         id=5,
-        name="Stage 5",
-        boss_name="Omega",
-        title="God Mode Boss",
+        name="Level 5",
+        boss_name="Expert Agent",
+        title="5-Ply Optimal Engine",
         depth=5,
         blunder_rate=0.0,
         turn_time=10,
         session_time=180,
-        hints_allowed=0,  # Hints completely disabled on Boss Level!
-        accent_color="#D500F9",  # Neon Purple
-        description="Uncompromising 5-ply Alpha-Beta search with hints disabled under 10s blitz pressure.",
+        hints_allowed=0,  # Hints disabled on Expert Level
+        accent_color="#BA68C8",  # Purple
+        description="Optimal 5-ply search evaluating tens of thousands of board states under strict blitz clock constraints.",
     ),
 }
 

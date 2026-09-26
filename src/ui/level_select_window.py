@@ -37,7 +37,7 @@ class StageCard(QFrame):
         self.on_select = on_select
 
         self.setObjectName(f"stage_card_{config.id}")
-        self.setFixedSize(175, 320)
+        self.setFixedSize(190, 335)
         self.setCursor(
             Qt.CursorShape.PointingHandCursor
             if is_unlocked
@@ -47,12 +47,12 @@ class StageCard(QFrame):
 
     def _setup_card(self):
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(14, 18, 14, 18)
+        layout.setContentsMargins(10, 18, 10, 18)
         layout.setSpacing(10)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Stage Number Pill
-        stage_pill = QLabel(f"STAGE 0{self.config.id}")
+        # Level Number Pill
+        stage_pill = QLabel(f"LEVEL 0{self.config.id}")
         stage_pill.setFont(QFont("Arial", 9, QFont.Weight.Bold))
         stage_pill.setAlignment(Qt.AlignmentFlag.AlignCenter)
         stage_pill.setStyleSheet(f"""
@@ -65,14 +65,15 @@ class StageCard(QFrame):
         """)
         layout.addWidget(stage_pill)
 
-        # Boss Name
+        # Agent Name
         boss_lbl = QLabel(self.config.boss_name)
-        boss_lbl.setFont(QFont("Arial", 18, QFont.Weight.Black))
+        boss_lbl.setFont(QFont("Arial", 13, QFont.Weight.Bold))
         boss_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        boss_lbl.setWordWrap(True)
         boss_lbl.setStyleSheet(f"""
             QLabel {{
                 color: {"#FFFFFF" if self.is_unlocked else "#64748B"};
-                letter-spacing: 1px;
+                letter-spacing: 0.3px;
                 border: none;
                 background: transparent;
             }}
@@ -83,6 +84,7 @@ class StageCard(QFrame):
         title_lbl = QLabel(self.config.title)
         title_lbl.setFont(QFont("Arial", 10))
         title_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_lbl.setWordWrap(True)
         title_lbl.setStyleSheet(
             "QLabel { color: #94A3B8; border: none; background: transparent; }"
         )
@@ -96,11 +98,13 @@ class StageCard(QFrame):
         layout.addWidget(sep)
 
         # Depth, Clock & Hint Badge
-        hint_str = (
-            f"{self.config.hints_allowed} Hints"
-            if self.config.hints_allowed > 0
-            else "No Hints"
-        )
+        if self.config.hints_allowed == 0:
+            hint_str = "No Hints"
+        elif self.config.hints_allowed == 1:
+            hint_str = "1 Hint"
+        else:
+            hint_str = f"{self.config.hints_allowed} Hints"
+
         info_lbl = QLabel(
             f"Depth {self.config.depth}  •  {self.config.turn_time}s  •  {hint_str}"
         )
@@ -129,8 +133,8 @@ class StageCard(QFrame):
             )
         layout.addWidget(status_lbl)
 
-        # Battle Action Button
-        btn = QPushButton("BATTLE" if self.is_unlocked else "LOCKED")
+        # Action Button
+        btn = QPushButton("START LEVEL" if self.is_unlocked else "LOCKED")
         btn.setFixedHeight(38)
         btn.setEnabled(self.is_unlocked)
         btn.setCursor(
@@ -144,9 +148,9 @@ class StageCard(QFrame):
                 QPushButton {{
                     background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 {self.config.accent_color}, stop:1 #FFFFFF);
                     color: #0B111E;
-                    font-size: 12px;
+                    font-size: 11px;
                     font-weight: 900;
-                    letter-spacing: 1.5px;
+                    letter-spacing: 1px;
                     border: none;
                     border-radius: 9px;
                 }}
@@ -169,7 +173,7 @@ class StageCard(QFrame):
             """)
         layout.addWidget(btn)
 
-        # Scoped Card Border styling (Never cascades borders to labels)
+        # Scoped Card Border styling
         card_id = f"stage_card_{self.config.id}"
         border_color = self.config.accent_color if self.is_unlocked else "#2A3B53"
         bg_color = "#162032" if self.is_unlocked else "#0F172A"
@@ -210,7 +214,7 @@ class LevelSelectScreen(QWidget):
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.main_layout.setSpacing(0)
-        self.main_layout.setContentsMargins(30, 20, 30, 20)
+        self.main_layout.setContentsMargins(20, 20, 20, 20)
 
         self.main_layout.addStretch(1)
 
@@ -219,14 +223,14 @@ class LevelSelectScreen(QWidget):
         title_box.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_box.setSpacing(6)
 
-        header = QLabel("AI CAMPAIGN ROADMAP")
-        header.setFont(QFont("Arial", 26, QFont.Weight.Black))
+        header = QLabel("AI DIFFICULTY BENCHMARK & LEVEL PROGRESSION")
+        header.setFont(QFont("Arial", 22, QFont.Weight.Black))
         header.setAlignment(Qt.AlignmentFlag.AlignCenter)
         header.setStyleSheet(
-            "color: #FFFFFF; letter-spacing: 3px; border: none; background: transparent;"
+            "color: #FFFFFF; letter-spacing: 2px; border: none; background: transparent;"
         )
 
-        self.subtitle = QLabel("Select an unlocked AI entity to challenge")
+        self.subtitle = QLabel("Select an AI agent level to begin evaluation")
         self.subtitle.setFont(QFont("Arial", 12))
         self.subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.subtitle.setStyleSheet(
@@ -242,7 +246,7 @@ class LevelSelectScreen(QWidget):
         # Cards Container Layout (Centered horizontally)
         self.cards_layout = QHBoxLayout()
         self.cards_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.cards_layout.setSpacing(16)
+        self.cards_layout.setSpacing(14)
         self.main_layout.addLayout(self.cards_layout)
 
         self.main_layout.addSpacing(26)
@@ -286,7 +290,7 @@ class LevelSelectScreen(QWidget):
 
         total_stars = prof.get("career_stats", {}).get("total_stars", 0)
         self.subtitle.setText(
-            f"Stage Progress: {highest_unlocked}/5 Unlocked   •   ⭐ {total_stars} / 15 Stars Earned"
+            f"Level Progress: {highest_unlocked}/5 Unlocked   •   ⭐ {total_stars} / 15 Stars Earned"
         )
 
         for lvl_id in range(1, 6):
@@ -311,7 +315,9 @@ class LevelSelectScreen(QWidget):
         painter.fillRect(self.rect(), bg_gradient)
 
         glow = QRadialGradient(
-            self.width() / 2, self.height() / 2, max(self.width(), self.height()) * 0.55
+            self.width() / 2,
+            self.height() / 2,
+            max(self.width(), self.height()) * 0.55,
         )
         glow.setColorAt(0.0, QColor(0, 229, 255, 14))
         glow.setColorAt(1.0, QColor(0, 0, 0, 0))

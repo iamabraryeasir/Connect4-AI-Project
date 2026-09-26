@@ -1,6 +1,6 @@
-# 🛠️ Setup & Running Guide — Connect 4 AI Arena
+# 🛠️ Setup & Running Guide — Connect 4 AI Laboratory
 
-This guide provides detailed instructions to set up, configure, run, and troubleshoot the **Connect 4 AI Arena** desktop application across **Windows**, **Linux**, and **macOS**.
+This guide provides detailed instructions to set up, configure, run, and evaluate the **Connect 4 Adversarial AI Laboratory** desktop application across **Windows**, **Linux**, and **macOS**.
 
 ---
 
@@ -17,7 +17,7 @@ This guide provides detailed instructions to set up, configure, run, and trouble
 
 ## 📦 Dependencies
 
-The application relies on clean, lightweight, high-performance libraries:
+The application relies on standard, lightweight, high-performance libraries:
 - **`PyQt6`** ($\ge 6.5.0$): Powers the windowing system, level select screen, and custom `QPainter` 2D graphics canvas.
 - **`numpy`** ($\ge 1.24.0$): Provides accelerated matrix operations for board state manipulation.
 
@@ -79,7 +79,7 @@ python -c "import PyQt6, numpy; print('PyQt6 and NumPy loaded successfully!')"
 
 ---
 
-## 🎮 Launching the Game
+## 🎮 Launching the Application
 
 To launch the desktop application:
 
@@ -87,20 +87,20 @@ To launch the desktop application:
 python main.py
 ```
 
-Upon launching, the game automatically initializes your local player account (`data/profile.json`) with Level 1 unlocked.
+Upon launching, the application automatically initializes your local player account (`data/profile.json`) with Level 1 unlocked.
 
 ---
 
-## 🧭 Navigating the Game
+## 🧭 Navigating the Application
 
 1. **Start Screen**:
-   - Displays your local player banner, career stars, total wins, and match duration choices.
-   - Choose between **Campaign Mode** (Level-by-Level Progression) or **Pass-and-Play PvP**.
-2. **Level Select Roadmap**:
-   - Visualizes all 5 stages from **Stage 1 (Spark)** to **Stage 5 (Omega Boss)**.
-   - Shows earned stars (★★★), high scores, and locked/unlocked stage statuses.
-3. **In-Game Arena**:
-   - Features dynamic blitz turn timers, interactive column target highlights, live telemetry HUD, and tactical AI hint buttons.
+   - Displays player evaluation profile, total stars earned, victories, and match timer settings.
+   - Choose between **AI Benchmark Mode (Level Progression)** or **Two-Player Pass & Play**.
+2. **Level Progression & Evaluation Select**:
+   - Displays all 5 evaluation tiers from **Level 1 (Novice Agent)** to **Level 5 (Expert Agent)**.
+   - Shows earned stars (★★★), high scores, and unlocked level statuses.
+3. **In-Game Evaluation Interface**:
+   - Features dynamic turn timers, interactive column target indicators, live search telemetry HUD, and bounded AI hint assistance.
 
 ---
 
@@ -116,8 +116,9 @@ Upon launching, the game automatically initializes your local player account (`d
   sudo apt install -y libxcb-xinerama0 libxcb-cursor0 libxkbcommon-x11-0 libgl1-mesa-glx
   ```
 
-### 3. Resetting Campaign Progress
-- **Fix**: To reset all unlocked levels and stars back to factory defaults, simply delete the `data/profile.json` file. The game will regenerate a clean profile on next startup.
+### 3. Resetting Benchmark & Evaluation Progress
+- **Global Keystroke**: Press `Ctrl + Shift + R` anywhere in the application to reset all unlocked levels, stars, and match statistics back to factory defaults.
+- **Manual Reset**: Alternatively, delete the `data/profile.json` file. The application will regenerate a clean profile on next startup.
 
 ---
 

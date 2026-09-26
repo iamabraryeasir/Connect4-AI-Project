@@ -10,7 +10,9 @@ from src.ui.start_screen import StartScreen
 class AppController(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Connect 4 — Tactical Cyberpunk AI Arena")
+        self.setWindowTitle(
+            "Connect 4 — Adversarial AI Laboratory & Evaluation Benchmark"
+        )
         self.setMinimumSize(980, 680)
         self.resize(1080, 740)
 

@@ -25,7 +25,7 @@ class GameWindow(QWidget):
         self.setMouseTracking(True)
 
         # Back to Menu / Level Select Button
-        self.back_btn = QPushButton("STAGE MAP", self)
+        self.back_btn = QPushButton("LEVEL SELECT", self)
         self.back_btn.setFixedHeight(36)
         self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.back_btn.setStyleSheet("""
@@ -74,7 +74,7 @@ class GameWindow(QWidget):
         self.hint_btn.clicked.connect(self.request_hint)
 
         # Next Level Button (Visible on Campaign Win)
-        self.next_level_btn = QPushButton("NEXT STAGE  ▶", self)
+        self.next_level_btn = QPushButton("NEXT LEVEL  ▶", self)
         self.next_level_btn.setFixedHeight(42)
         self.next_level_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.next_level_btn.setStyleSheet("""
@@ -95,7 +95,7 @@ class GameWindow(QWidget):
         self.next_level_btn.hide()
 
         # Restart Button
-        self.restart_btn = QPushButton("REPLAY STAGE", self)
+        self.restart_btn = QPushButton("RETRY LEVEL", self)
         self.restart_btn.setFixedHeight(42)
         self.restart_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.restart_btn.clicked.connect(self.restart_game)
@@ -145,7 +145,7 @@ class GameWindow(QWidget):
         self.state = game_state.create_initial_state(
             mode=mode, level_id=level_id, session_time=session_time
         )
-        self.back_btn.setText("STAGE MAP" if mode == "campaign" else "QUIT TO MENU")
+        self.back_btn.setText("LEVEL SELECT" if mode == "campaign" else "QUIT TO MENU")
         self._reposition_elements()
         self.clock_timer.start(1000)
         self.update_ui_state()
@@ -187,12 +187,7 @@ class GameWindow(QWidget):
         hints_rem = self.state.get("hints_remaining", 0)
         hints_initial = self.state.get("initial_hints_allowed", 0)
 
-        if (
-            is_game_over
-            or self.state["ai_thinking"]
-            or self.state["consecutive_turns"] > 1
-            or hints_initial == 0
-        ):
+        if is_game_over or self.state["ai_thinking"] or hints_initial == 0:
             self.hint_btn.hide()
         elif not is_game_over and (
             self.state["mode"] == "pvp" or self.state["current_player"] == 1
@@ -244,10 +239,10 @@ class GameWindow(QWidget):
             if is_campaign and won and lvl_id < 5:
                 self.hint_btn.hide()
                 self.next_level_btn.show()
-                self.restart_btn.setText("REPLAY STAGE")
+                self.restart_btn.setText("RETRY LEVEL")
             else:
                 self.next_level_btn.hide()
-                self.restart_btn.setText("PLAY AGAIN")
+                self.restart_btn.setText("RETRY LEVEL" if is_campaign else "PLAY AGAIN")
 
             self.restart_btn.setStyleSheet("""
                 QPushButton {

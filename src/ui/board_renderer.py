@@ -88,7 +88,8 @@ def draw_game(painter, state: Dict[str, Any], width: int, height: int):
             if is_campaign:
                 stars = state.get("earned_stars", 1)
                 star_str = "★" * stars + "☆" * (3 - stars)
-                text = f"VICTORY! STAGE CLEARED  [{star_str}]"
+                lvl_id = state.get("level_id", 1)
+                text = f"LEVEL {lvl_id} COMPLETED  [{star_str}]"
             else:
                 text = "PLAYER 1 WINS THE MATCH!"
             color = QColor("#00E676") if is_campaign else QColor("#FF4B4B")
@@ -100,11 +101,6 @@ def draw_game(painter, state: Dict[str, Any], width: int, height: int):
         text = f"{boss_name} IS THINKING..."
         color = boss_color
     else:
-        turns_left = (
-            f" (Move {3 - state['consecutive_turns']} of 2)"
-            if state["consecutive_turns"] > 1
-            else ""
-        )
         if state["current_player"] == 1:
             player_label = "PLAYER 1"
             color = QColor("#FF4B4B")
@@ -112,7 +108,7 @@ def draw_game(painter, state: Dict[str, Any], width: int, height: int):
             player_label = boss_name if is_campaign else "PLAYER 2"
             color = boss_color
 
-        text = f"CURRENT TURN: {player_label}{turns_left}"
+        text = f"CURRENT TURN: {player_label}"
 
     painter.setPen(QPen(color))
     painter.setFont(QFont("Arial", 16, QFont.Weight.Bold))
@@ -182,7 +178,7 @@ def draw_game(painter, state: Dict[str, Any], width: int, height: int):
 
     painter.setPen(QColor("#64748B"))
     painter.setFont(QFont("Arial", 10, QFont.Weight.Bold))
-    ai_header = f"AI: {boss_name}" if is_campaign else "MINIMAX AI ENGINE"
+    ai_header = f"AI AGENT: {boss_name}" if is_campaign else "MINIMAX AI ENGINE"
     painter.drawText(panel_x + 16, y_card3 + 22, ai_header)
 
     painter.setFont(QFont("Arial", 11))

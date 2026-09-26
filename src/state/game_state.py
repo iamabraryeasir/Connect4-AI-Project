@@ -46,7 +46,6 @@ def create_initial_state(
         "turn_time": turn_time_val,
         "initial_turn_time": turn_time_val,
         "consecutive_turns": 1,
-        "next_player_bonus_turns": 0,
         "hint_active": False,
         "hint_col": -1,
         "hints_remaining": hints_val,
@@ -60,21 +59,11 @@ def create_initial_state(
 
 
 def switch_turns(state: Dict[str, Any]) -> Dict[str, Any]:
-    state["consecutive_turns"] -= 1
     state["turn_time"] = state.get("initial_turn_time", 15)
     state["hint_active"] = False
-
-    if state["consecutive_turns"] > 0:
-        return state
-
+    state["hint_col"] = -1
+    state["consecutive_turns"] = 1
     state["current_player"] = 2 if state["current_player"] == 1 else 1
-
-    if state["next_player_bonus_turns"] > 0:
-        state["consecutive_turns"] = state["next_player_bonus_turns"]
-        state["next_player_bonus_turns"] = 0
-    else:
-        state["consecutive_turns"] = 1
-
     return state
 
 
@@ -147,14 +136,13 @@ def _finalize_match(
 
 
 def apply_hint(state: Dict[str, Any]) -> Dict[str, Any]:
-    if state.get("hints_remaining", 0) <= 0:
+    if state.get("hints_remaining", 0) <= 0 or state.get("game_over", False):
         return state
 
     state["hints_remaining"] -= 1
     col, _ = minimax.get_best_move(state["board"], depth=5)
     state["hint_col"] = col
     state["hint_active"] = True
-    state["next_player_bonus_turns"] = 2
     return state
 
 

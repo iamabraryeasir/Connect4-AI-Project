@@ -67,7 +67,7 @@ class StartScreen(QWidget):
         # Header Badge
         badge_container = QHBoxLayout()
         badge_container.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        badge = QLabel("CYBERPUNK AI ARENA  •  5-STAGE CAMPAIGN")
+        badge = QLabel("AI LABORATORY  •  ADVERSARIAL SEARCH BENCHMARK")
         badge.setStyleSheet("""
             QLabel {
                 background-color: rgba(0, 229, 255, 0.08);
@@ -90,7 +90,7 @@ class StartScreen(QWidget):
         title.setStyleSheet("color: #FFFFFF; letter-spacing: 4px; margin-top: 2px;")
         c_layout.addWidget(title)
 
-        # Profile Summary Card (Scoped Styling to eliminate boxy child borders)
+        # Profile Summary Card
         self.profile_card = QFrame()
         self.profile_card.setObjectName("profile_card")
         self.profile_card.setFixedSize(440, 115)
@@ -127,15 +127,15 @@ class StartScreen(QWidget):
 
         c_layout.addWidget(self.profile_card)
 
-        # Action Button 1: Campaign Mode
-        campaign_btn = QPushButton("▶   START CAMPAIGN")
+        # Action Button 1: AI Benchmark Mode
+        campaign_btn = QPushButton("▶   START AI BENCHMARK (LEVELS)")
         campaign_btn.setFixedSize(440, 50)
         campaign_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         campaign_btn.setStyleSheet("""
             QPushButton {
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #00E5FF, stop:1 #00E676);
                 color: #0B111E;
-                font-size: 14px;
+                font-size: 13px;
                 font-weight: 900;
                 letter-spacing: 1.5px;
                 border: none;
@@ -152,7 +152,7 @@ class StartScreen(QWidget):
         c_layout.addWidget(campaign_btn)
 
         # PvP Duration Dropdown & Label
-        pvp_label = QLabel("PASS & PLAY PVP DURATION")
+        pvp_label = QLabel("TWO-PLAYER PASS & PLAY CONFIGURATION")
         pvp_label.setStyleSheet(
             "color: #64748B; font-size: 10px; font-weight: 700; margin-top: 4px;"
         )
@@ -213,7 +213,7 @@ class StartScreen(QWidget):
         c_layout.addWidget(self.time_box)
 
         # Action Button 2: PvP Mode
-        pvp_btn = QPushButton("👥   LOCAL PVP DUEL")
+        pvp_btn = QPushButton("👥   TWO-PLAYER PASS & PLAY")
         pvp_btn.setFixedSize(440, 46)
         pvp_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         pvp_btn.setStyleSheet("""
@@ -257,7 +257,7 @@ class StartScreen(QWidget):
         total_stars = career.get("total_stars", 0)
 
         self.name_label.setText(
-            f"👤  {pname.upper()}   •   STAGE {unlocked}/5 UNLOCKED"
+            f"👤  {pname.upper()}   •   LEVEL {unlocked}/5 UNLOCKED"
         )
         self.stats_label.setText(
             f"🏆 {wins} Wins   |   💀 {losses} Losses   |   🔥 Streak: {streak}"
@@ -276,7 +276,9 @@ class StartScreen(QWidget):
 
         # Soft Cyan Center Glow
         glow = QRadialGradient(
-            self.width() / 2, self.height() / 2, max(self.width(), self.height()) * 0.5
+            self.width() / 2,
+            self.height() / 2,
+            max(self.width(), self.height()) * 0.5,
         )
         glow.setColorAt(0.0, QColor(0, 229, 255, 16))
         glow.setColorAt(1.0, QColor(0, 0, 0, 0))
