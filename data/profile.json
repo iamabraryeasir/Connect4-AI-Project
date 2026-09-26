@@ -1,0 +1,49 @@
+{
+  "player_name": "Player 1",
+  "highest_unlocked_level": 1,
+  "level_progress": {
+    "1": {
+      "completed": false,
+      "stars": 0,
+      "best_time_sec": null,
+      "wins": 0,
+      "losses": 0
+    },
+    "2": {
+      "completed": false,
+      "stars": 0,
+      "best_time_sec": null,
+      "wins": 0,
+      "losses": 0
+    },
+    "3": {
+      "completed": false,
+      "stars": 0,
+      "best_time_sec": null,
+      "wins": 0,
+      "losses": 0
+    },
+    "4": {
+      "completed": false,
+      "stars": 0,
+      "best_time_sec": null,
+      "wins": 0,
+      "losses": 0
+    },
+    "5": {
+      "completed": false,
+      "stars": 0,
+      "best_time_sec": null,
+      "wins": 0,
+      "losses": 0
+    }
+  },
+  "career_stats": {
+    "total_matches": 0,
+    "total_wins": 0,
+    "total_losses": 0,
+    "win_streak": 0,
+    "best_win_streak": 0,
+    "total_stars": 0
+  }
+}

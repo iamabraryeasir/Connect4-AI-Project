@@ -1,6 +1,6 @@
-# 🛠️ Setup & Running Guide — Connect 4 AI
+# 🛠️ Setup & Running Guide — Connect 4 AI Arena
 
-This guide provides detailed instructions to set up, configure, run, and troubleshoot the **Connect 4 AI** desktop application across **Windows**, **Linux**, and **macOS**.
+This guide provides detailed instructions to set up, configure, run, and troubleshoot the **Connect 4 AI Arena** desktop application across **Windows**, **Linux**, and **macOS**.
 
 ---
 
@@ -17,9 +17,9 @@ This guide provides detailed instructions to set up, configure, run, and trouble
 
 ## 📦 Dependencies
 
-The application relies on lightweight, high-performance libraries:
-- **`PyQt6`** ($\ge 6.5.0$): Powers the GUI, windowing system, and custom `QPainter` 2D graphics.
-- **`numpy`** ($\ge 1.24.0$): Provides accelerated matrix operations for board state representations.
+The application relies on clean, lightweight, high-performance libraries:
+- **`PyQt6`** ($\ge 6.5.0$): Powers the windowing system, level select screen, and custom `QPainter` 2D graphics canvas.
+- **`numpy`** ($\ge 1.24.0$): Provides accelerated matrix operations for board state manipulation.
 
 ---
 
@@ -36,7 +36,7 @@ cd Connect4-AI-Project
 
 ### 2. Create and Activate a Virtual Environment
 
-Isolating dependencies inside a virtual environment prevents version conflicts with other Python projects.
+Isolating dependencies inside a virtual environment prevents package conflicts.
 
 #### 🪟 Windows (PowerShell)
 ```powershell
@@ -65,74 +65,66 @@ source .venv/bin/activate
 
 ### 3. Install Required Packages
 
-With your virtual environment activated, install the required packages:
+With your virtual environment activated:
 
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-To verify the installation:
+Verify that all dependencies are properly installed:
 ```bash
-python -c "import PyQt6, numpy; print('PyQt6 and NumPy installed successfully!')"
+python -c "import PyQt6, numpy; print('PyQt6 and NumPy loaded successfully!')"
 ```
 
 ---
 
 ## 🎮 Launching the Game
 
-To start the desktop application:
+To launch the desktop application:
 
 ```bash
 python main.py
 ```
 
+Upon launching, the game automatically initializes your local player account (`data/profile.json`) with Level 1 unlocked.
+
 ---
 
-## 🛠️ Configuration Options
+## 🧭 Navigating the Game
 
-When the game launcher displays:
-
-1. **Game Mode Selection**:
-   - `Player vs AI`: Single-player tactical challenge against the Minimax engine.
-   - `Player vs Player (PvP)`: Pass-and-play local multiplayer on the same machine.
-2. **Match Duration**:
-   - `3 Minutes`: Rapid blitz match.
-   - `5 Minutes`: Standard tournament game.
-   - `10 Minutes`: Extended strategic battle.
-
-Click **START MATCH** to begin!
+1. **Start Screen**:
+   - Displays your local player banner, career stars, total wins, and match duration choices.
+   - Choose between **Campaign Mode** (Level-by-Level Progression) or **Pass-and-Play PvP**.
+2. **Level Select Roadmap**:
+   - Visualizes all 5 stages from **Stage 1 (Spark)** to **Stage 5 (Omega Boss)**.
+   - Shows earned stars (★★★), high scores, and locked/unlocked stage statuses.
+3. **In-Game Arena**:
+   - Features dynamic blitz turn timers, interactive column target highlights, live telemetry HUD, and tactical AI hint buttons.
 
 ---
 
 ## 🔍 Troubleshooting & FAQ
 
 ### 1. `ModuleNotFoundError: No module named 'PyQt6'`
-- **Cause**: The virtual environment is either not activated or dependencies were installed to a different Python environment.
-- **Fix**: Re-activate your virtual environment and run `pip install -r requirements.txt`.
+- **Fix**: Ensure your virtual environment is active before running `python main.py`. If needed, run `pip install -r requirements.txt`.
 
 ### 2. Linux: `qt.qpa.plugin: Could not load the Qt platform plugin "xcb"`
-- **Cause**: Missing X11/XCB display libraries on Debian/Ubuntu systems.
-- **Fix**: Run:
+- **Fix**: Install the necessary X11/XCB display packages:
   ```bash
   sudo apt update
   sudo apt install -y libxcb-xinerama0 libxcb-cursor0 libxkbcommon-x11-0 libgl1-mesa-glx
   ```
 
-### 3. High DPI / Display Scaling Issues on Windows
-- PyQt6 automatically manages DPI scaling. If UI elements appear too small or oversized, set the Qt scaling environment variable before running:
-  ```powershell
-  $env:QT_AUTO_SCREEN_SCALE_FACTOR="1"
-  python main.py
-  ```
+### 3. Resetting Campaign Progress
+- **Fix**: To reset all unlocked levels and stars back to factory defaults, simply delete the `data/profile.json` file. The game will regenerate a clean profile on next startup.
 
 ---
 
-## 🧪 Verification & Development
+## 🧪 Verification & Headless Testing
 
-To test the core AI and state manager without launching the GUI:
+To test the core Minimax AI engine and profile manager without launching the GUI:
 
 ```bash
-python -c "from src.ai import minimax; from src.core import game_logic; b = game_logic.create_board(); col, nodes = minimax.get_best_move(b, depth=4); print(f'Best col: {col}, Nodes explored: {nodes}')"
+python -c "from src.ai import minimax; from src.core import game_logic; b = game_logic.create_board(); col, nodes = minimax.get_best_move(b, depth=4, blunder_rate=0.0); print(f'Best col: {col}, Nodes explored: {nodes}')"
 ```
-

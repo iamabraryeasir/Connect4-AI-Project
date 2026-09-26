@@ -171,7 +171,17 @@ def minimax(
         return best_col, value
 
 
-def get_best_move(board, depth=5):
+def get_best_move(board, depth=5, blunder_rate=0.0):
+    valid_locations = get_valid_locations(board)
+    if not valid_locations:
+        return 0, 0
+
+    # Blunder injection for novice/apprentice levels
+    if blunder_rate > 0.0 and random.random() < blunder_rate:
+        return random.choice(valid_locations), 1
+
     nodes_count = [0]
     col, _ = minimax(board, depth, -np.inf, np.inf, True, nodes_count)
+    if col is None or col not in valid_locations:
+        col = random.choice(valid_locations)
     return col, nodes_count[0]
