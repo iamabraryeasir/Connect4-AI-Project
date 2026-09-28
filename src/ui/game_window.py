@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPainter
@@ -15,7 +15,7 @@ class GameWindow(QWidget):
         self,
         profile_manager: ProfileManager,
         go_home_callback: Callable[[], None],
-        on_next_level: Optional[Callable[[int], None]] = None,
+        on_next_level: Callable[[int], None] | None = None,
     ):
         super().__init__()
         self.profile_manager = profile_manager
@@ -137,7 +137,7 @@ class GameWindow(QWidget):
         self,
         mode: str = "campaign",
         level_id: int = 1,
-        session_time: Optional[int] = None,
+        session_time: int | None = None,
     ):
         self.initial_mode = mode
         self.initial_level_id = level_id

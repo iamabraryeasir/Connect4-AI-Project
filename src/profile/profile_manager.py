@@ -1,48 +1,21 @@
 import json
-import os
-from typing import Any, Dict, Optional
+from pathlib import Path
+from typing import Any
 
 
-def get_default_profile() -> Dict[str, Any]:
+def get_default_profile() -> dict[str, Any]:
     return {
         "player_name": "Player 1",
         "highest_unlocked_level": 1,
         "level_progress": {
-            "1": {
+            str(lvl): {
                 "completed": False,
                 "stars": 0,
                 "best_time_sec": None,
                 "wins": 0,
                 "losses": 0,
-            },
-            "2": {
-                "completed": False,
-                "stars": 0,
-                "best_time_sec": None,
-                "wins": 0,
-                "losses": 0,
-            },
-            "3": {
-                "completed": False,
-                "stars": 0,
-                "best_time_sec": None,
-                "wins": 0,
-                "losses": 0,
-            },
-            "4": {
-                "completed": False,
-                "stars": 0,
-                "best_time_sec": None,
-                "wins": 0,
-                "losses": 0,
-            },
-            "5": {
-                "completed": False,
-                "stars": 0,
-                "best_time_sec": None,
-                "wins": 0,
-                "losses": 0,
-            },
+            }
+            for lvl in range(1, 6)
         },
         "career_stats": {
             "total_matches": 0,
@@ -56,23 +29,20 @@ def get_default_profile() -> Dict[str, Any]:
 
 
 class ProfileManager:
-    def __init__(self, file_path: Optional[str] = None):
+    def __init__(self, file_path: str | Path | None = None):
         if file_path is None:
-            # Default location: <project_root>/data/profile.json
-            base_dir = os.path.dirname(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            self.file_path = (
+                Path(__file__).resolve().parent.parent.parent / "data" / "profile.json"
             )
-            self.data_dir = os.path.join(base_dir, "data")
-            self.file_path = os.path.join(self.data_dir, "profile.json")
         else:
-            self.file_path = file_path
-            self.data_dir = os.path.dirname(self.file_path)
+            self.file_path = Path(file_path)
 
-        self._profile: Dict[str, Any] = self.load_profile()
+        self.data_dir = self.file_path.parent
+        self._profile: dict[str, Any] = self.load_profile()
 
-    def load_profile(self) -> Dict[str, Any]:
-        os.makedirs(self.data_dir, exist_ok=True)
-        if not os.path.exists(self.file_path):
+    def load_profile(self) -> dict[str, Any]:
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        if not self.file_path.exists():
             default_data = get_default_profile()
             self.save_profile(default_data)
             return default_data
@@ -80,39 +50,21 @@ class ProfileManager:
         try:
             with open(self.file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-
-            # Auto-heal schema if keys are missing
-            default_data = get_default_profile()
-            if "level_progress" not in data:
-                data["level_progress"] = default_data["level_progress"]
-            else:
-                for k, v in default_data["level_progress"].items():
-                    if k not in data["level_progress"]:
-                        data["level_progress"][k] = v
-
-            if "career_stats" not in data:
-                data["career_stats"] = default_data["career_stats"]
-            if "highest_unlocked_level" not in data:
-                data["highest_unlocked_level"] = 1
-            if "player_name" not in data:
-                data["player_name"] = "Player 1"
-
             return data
-        except Exception:
+        except (json.JSONDecodeError, OSError, KeyError, TypeError):
             default_data = get_default_profile()
             self.save_profile(default_data)
             return default_data
 
-    def save_profile(self, profile_data: Optional[Dict[str, Any]] = None) -> None:
+    def save_profile(self, profile_data: dict[str, Any] | None = None) -> None:
         if profile_data is not None:
             self._profile = profile_data
-        os.makedirs(self.data_dir, exist_ok=True)
-        temp_path = f"{self.file_path}.tmp"
-        with open(temp_path, "w", encoding="utf-8") as f:
-            json.dump(self._profile, f, indent=2)
-        os.replace(temp_path, self.file_path)
 
-    def get_profile(self) -> Dict[str, Any]:
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        with open(self.file_path, "w", encoding="utf-8") as f:
+            json.dump(self._profile, f, indent=2)
+
+    def get_profile(self) -> dict[str, Any]:
         return self._profile
 
     def is_level_unlocked(self, level_id: int) -> bool:
@@ -130,8 +82,7 @@ class ProfileManager:
             return 3
         elif moves_count <= 22:
             return 2
-        else:
-            return 1
+        return 1
 
     def record_match_result(
         self,
@@ -140,7 +91,7 @@ class ProfileManager:
         moves_count: int = 0,
         elapsed_time: int = 0,
         session_time: int = 300,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         lvl_key = str(level_id)
         progress = self._profile.setdefault("level_progress", {})
         lvl_stat = progress.setdefault(
@@ -201,7 +152,7 @@ class ProfileManager:
             "highest_unlocked_level": self._profile.get("highest_unlocked_level", 1),
         }
 
-    def reset_profile(self) -> Dict[str, Any]:
+    def reset_profile(self) -> dict[str, Any]:
         self._profile = get_default_profile()
         self.save_profile()
         return self._profile

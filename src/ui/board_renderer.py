@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 from PyQt6.QtCore import QPointF, Qt
 from PyQt6.QtGui import QBrush, QColor, QFont, QLinearGradient, QPen, QRadialGradient
@@ -7,7 +7,7 @@ from src.core import game_logic
 from src.levels.level_config import LevelConfig
 
 
-def calculate_layout(width: int, height: int) -> Dict[str, int]:
+def calculate_layout(width: int, height: int) -> dict[str, int]:
     margin_top = max(80, min(130, int(height * 0.15)))
     avail_h = height - margin_top - 35
     avail_w = width - 60
@@ -49,7 +49,7 @@ def get_column_from_x(x: int, width: int, height: int) -> int:
     return -1
 
 
-def draw_game(painter, state: Dict[str, Any], width: int, height: int):
+def draw_game(painter, state: dict[str, Any], width: int, height: int):
     layout = calculate_layout(width, height)
     cell_size = layout["cell_size"]
     margin_top = layout["margin_top"]
@@ -59,7 +59,7 @@ def draw_game(painter, state: Dict[str, Any], width: int, height: int):
     panel_w = layout["panel_w"]
     panel_x = layout["panel_x"]
 
-    stage_cfg: LevelConfig = state.get("stage_config")
+    stage_cfg: LevelConfig | None = state.get("stage_config")
     is_campaign = state.get("mode") == "campaign"
     boss_name = stage_cfg.boss_name.upper() if stage_cfg else "AI"
     boss_color_hex = stage_cfg.accent_color if stage_cfg else "#FFD54F"

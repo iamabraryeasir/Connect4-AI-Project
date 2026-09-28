@@ -1,5 +1,5 @@
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 from src.ai import minimax, win_checker
 from src.core import game_logic
@@ -10,9 +10,9 @@ from src.profile.profile_manager import ProfileManager
 def create_initial_state(
     mode: str = "campaign",
     level_id: int = 1,
-    session_time: Optional[int] = None,
-) -> Dict[str, Any]:
-    stage_config: Optional[LevelConfig] = (
+    session_time: int | None = None,
+) -> dict[str, Any]:
+    stage_config: LevelConfig | None = (
         get_level(level_id) if mode == "campaign" else None
     )
 
@@ -58,7 +58,7 @@ def create_initial_state(
     }
 
 
-def switch_turns(state: Dict[str, Any]) -> Dict[str, Any]:
+def switch_turns(state: dict[str, Any]) -> dict[str, Any]:
     state["turn_time"] = state.get("initial_turn_time", 15)
     state["hint_active"] = False
     state["hint_col"] = -1
@@ -68,10 +68,10 @@ def switch_turns(state: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def execute_move(
-    state: Dict[str, Any],
+    state: dict[str, Any],
     col: int,
-    profile_manager: Optional[ProfileManager] = None,
-) -> Dict[str, Any]:
+    profile_manager: ProfileManager | None = None,
+) -> dict[str, Any]:
     if state["game_over"] or col == -1:
         return state
 
@@ -113,7 +113,7 @@ def execute_move(
 
 
 def _finalize_match(
-    state: Dict[str, Any], profile_manager: Optional[ProfileManager] = None
+    state: dict[str, Any], profile_manager: ProfileManager | None = None
 ) -> None:
     if state.get("result_recorded") or profile_manager is None:
         return
@@ -135,7 +135,7 @@ def _finalize_match(
         state["new_unlock"] = res.get("new_unlock", False)
 
 
-def apply_hint(state: Dict[str, Any]) -> Dict[str, Any]:
+def apply_hint(state: dict[str, Any]) -> dict[str, Any]:
     if state.get("hints_remaining", 0) <= 0 or state.get("game_over", False):
         return state
 
@@ -147,8 +147,8 @@ def apply_hint(state: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def tick_timers(
-    state: Dict[str, Any], profile_manager: Optional[ProfileManager] = None
-) -> Dict[str, Any]:
+    state: dict[str, Any], profile_manager: ProfileManager | None = None
+) -> dict[str, Any]:
     if state["game_over"]:
         return state
 
@@ -172,9 +172,9 @@ def tick_timers(
 
 
 def process_ai_turn(
-    state: Dict[str, Any], profile_manager: Optional[ProfileManager] = None
-) -> Dict[str, Any]:
-    stage: Optional[LevelConfig] = state.get("stage_config")
+    state: dict[str, Any], profile_manager: ProfileManager | None = None
+) -> dict[str, Any]:
+    stage: LevelConfig | None = state.get("stage_config")
     depth = stage.depth if stage else 5
     blunder_rate = stage.blunder_rate if stage else 0.0
 

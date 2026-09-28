@@ -1,4 +1,4 @@
-from typing import Callable
+from collections.abc import Callable
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import (

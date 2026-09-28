@@ -1,4 +1,4 @@
-from typing import Callable
+from collections.abc import Callable
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import (
@@ -128,7 +128,7 @@ class StartScreen(QWidget):
         c_layout.addWidget(self.profile_card)
 
         # Action Button 1: AI Benchmark Mode
-        campaign_btn = QPushButton("▶   START AI BENCHMARK (LEVELS)")
+        campaign_btn = QPushButton("Start Playing With AI")
         campaign_btn.setFixedSize(440, 50)
         campaign_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         campaign_btn.setStyleSheet("""

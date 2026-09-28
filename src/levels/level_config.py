@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Dict, Optional
 
 
 @dataclass(frozen=True)
@@ -17,7 +16,7 @@ class LevelConfig:
     description: str
 
 
-LEVELS: Dict[int, LevelConfig] = {
+LEVELS: dict[int, LevelConfig] = {
     1: LevelConfig(
         id=1,
         name="Level 1",
@@ -86,11 +85,11 @@ LEVELS: Dict[int, LevelConfig] = {
 }
 
 
-def get_level(level_id: int) -> Optional[LevelConfig]:
+def get_level(level_id: int) -> LevelConfig | None:
     return LEVELS.get(level_id)
 
 
-def get_all_levels() -> Dict[int, LevelConfig]:
+def get_all_levels() -> dict[int, LevelConfig]:
     return LEVELS
 
 
