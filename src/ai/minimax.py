@@ -171,14 +171,73 @@ def minimax(
         return best_col, value
 
 
-def get_best_move(board, depth=5, blunder_rate=0.0):
+def get_best_move(board, depth=5, blunder_rate=0.0, diagnostics=False):
     valid_locations = get_valid_locations(board)
     if not valid_locations:
         return 0, 0
 
-    # Blunder injection for novice/apprentice levels
-    if blunder_rate > 0.0 and random.random() < blunder_rate:
+    is_blunder = blunder_rate > 0.0 and random.random() < blunder_rate
+    if is_blunder and not diagnostics:
         return random.choice(valid_locations), 1
+
+    if diagnostics:
+        nodes_count = [0]
+        candidate_scores = {}
+        candidate_heuristics = {}
+        best_col = None
+        best_score = -np.inf
+
+        for candidate_col in valid_locations:
+            row = game_logic.get_next_open_row(board, candidate_col)
+            candidate_board = board.copy()
+            game_logic.drop_piece(candidate_board, row, candidate_col, AI_PIECE)
+            candidate_heuristics[candidate_col] = score_position(
+                candidate_board, AI_PIECE
+            )
+
+            _, candidate_score = minimax(
+                candidate_board,
+                depth - 1,
+                -np.inf,
+                np.inf,
+                False,
+                nodes_count,
+                row,
+                candidate_col,
+                AI_PIECE,
+            )
+            candidate_scores[candidate_col] = int(candidate_score)
+            if candidate_score > best_score:
+                best_score = candidate_score
+                best_col = candidate_col
+
+        chosen_col = random.choice(valid_locations) if is_blunder else best_col
+        chosen_score = candidate_scores[chosen_col]
+
+        print(f"\n--- Minimax Evaluation (Depth: {depth}) ---")
+        for candidate_col in sorted(valid_locations):
+            heuristic_score = candidate_heuristics[candidate_col]
+            center_count = sum(
+                int(piece) == AI_PIECE for piece in board[:, COLUMN_COUNT // 2]
+            )
+            center_score = center_count * 6
+            # The candidate heuristic includes the newly placed piece's center bonus.
+            if candidate_col == COLUMN_COUNT // 2:
+                center_score += 6
+            pattern_score = heuristic_score - center_score
+            marker = " -> BEST" if candidate_col == best_col else ""
+            if is_blunder and candidate_col == chosen_col:
+                marker = " -> CHOSEN (BLUNDER)"
+            print(
+                f"  Column {candidate_col}: score = "
+                f"{candidate_scores[candidate_col]:+d} (minimax) | "
+                f"heuristic = {center_score:+d}(center) + "
+                f"{pattern_score:+d}(patterns) = {heuristic_score:+d}{marker}"
+            )
+        print(f"Chosen move: Column {chosen_col} (score: {chosen_score})")
+        print(f"Nodes explored: {nodes_count[0]}")
+        print("-------------------------------------------")
+        return chosen_col, nodes_count[0]
 
     nodes_count = [0]
     col, _ = minimax(board, depth, -np.inf, np.inf, True, nodes_count)

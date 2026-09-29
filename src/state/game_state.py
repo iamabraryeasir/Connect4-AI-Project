@@ -180,7 +180,7 @@ def process_ai_turn(
 
     start_time = time.perf_counter()
     best_col, ai_nodes_explored = minimax.get_best_move(
-        state["board"], depth=depth, blunder_rate=blunder_rate
+        state["board"], depth=depth, blunder_rate=blunder_rate, diagnostics=True
     )
     end_time = time.perf_counter()
 

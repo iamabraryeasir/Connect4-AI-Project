@@ -7,7 +7,7 @@
       "stars": 3,
       "best_time_sec": 4,
       "wins": 3,
-      "losses": 0
+      "losses": 1
     },
     "2": {
       "completed": false,
@@ -39,10 +39,10 @@
     }
   },
   "career_stats": {
-    "total_matches": 4,
+    "total_matches": 5,
     "total_wins": 3,
-    "total_losses": 1,
-    "win_streak": 2,
+    "total_losses": 2,
+    "win_streak": 0,
     "best_win_streak": 2,
     "total_stars": 3
   }
